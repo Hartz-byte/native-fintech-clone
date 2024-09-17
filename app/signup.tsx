@@ -1,6 +1,6 @@
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
-// import { useSignUp } from "@clerk/clerk-expo";
+import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -18,22 +18,23 @@ const Page = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
   const router = useRouter();
-  // const { signUp } = useSignUp();
+  const { signUp } = useSignUp();
 
   const onSignup = async () => {
-    // const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-    // try {
-    //   await signUp!.create({
-    //     phoneNumber: fullPhoneNumber,
-    //   });
-    //   signUp!.preparePhoneNumberVerification();
-    //   router.push({
-    //     pathname: "/verify/[phone]",
-    //     params: { phone: fullPhoneNumber },
-    //   });
-    // } catch (error) {
-    //   console.error("Error signing up:", error);
-    // }
+    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+
+    try {
+      await signUp!.create({
+        phoneNumber: fullPhoneNumber,
+      });
+      signUp!.preparePhoneNumberVerification();
+      router.push({
+        pathname: "./verify/[phone]",
+        params: { phone: fullPhoneNumber },
+      });
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
   };
 
   return (
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGray,
     padding: 20,
     borderRadius: 16,
-    fontSize: 20,
+    fontSize: 15,
     marginRight: 10,
   },
   enabled: {
